@@ -1,0 +1,26 @@
+#!/bin/bash
+
+filename=$1
+scriptName=$filename.QScript
+if [ -s $filename ]
+then
+    while read line
+    do
+	echo "echo"
+	echo "echo '=============================='"
+	echo 'echo "Command: "'$line
+	echo "read -p 'Execute? '"
+	echo 'if [ "$REPLY" = "q" ] ; then shout.alert Quitting ; exit 1 ; fi'
+	echo 'if [ "$REPLY" = "n" ] ; then'
+	echo "    shout.alert Skipping"
+	echo 'else'
+	echo "    "$line
+	echo 'fi'
+    done > $scriptName < $filename
+    chmod +x $scriptName
+
+    echo Created $scriptName
+else
+    echo $filename does not exist
+    exit 1
+fi

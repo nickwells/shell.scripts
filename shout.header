@@ -1,0 +1,13 @@
+#!/bin/bash
+
+eq="==================================================================================="
+
+echo
+echo $eq
+echo $eq
+echo
+echo $*
+echo
+echo $eq
+echo $eq
+echo

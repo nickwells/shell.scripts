@@ -1,0 +1,7 @@
+#!/bin/bash
+
+EQ='==='
+EQ9='========='
+echo "$EQ9"
+echo "$EQ ALERT:" $*
+echo "$EQ9"

@@ -1,0 +1,125 @@
+#!/bin/bash
+# -*- ksh -*-
+
+intro='    # '
+bundleFile="bundle.out"
+force=0
+
+while [ $# -gt 0 ]
+do
+    case $1 in
+	-b | -bundle-file)
+			  ArgName="$1"
+			  shift
+
+			  if [ $# -gt 0 ] ; then
+			      bundleFile="$1"
+			  else
+			      echo "a file name is expected after" $ArgName 1>&2
+			      exit 1
+			  fi
+			  ;;
+	-f | -force)
+		     force=1
+		     ;;
+	-p | -prefix)
+		      ArgName="$1"
+		      shift
+		      
+		      if [ $# -gt 0 ] ; then
+			  intro="$1"
+		      else
+			  echo "an intro string is expected after" $ArgName 1>&2
+			  exit 1
+		      fi
+		      ;;
+	-h | -help)
+	    echo "bundle [-f|-force] [-p|-prefix pfx] [-b|-bundle-file filename]"
+	    exit 0
+	    ;;
+	*)
+	    break
+	    ;;
+    esac
+    shift
+done
+
+if [ $# -eq 0 ]
+then
+    echo "you must supply at least one filename"
+    exit
+fi
+
+if [ -f "$bundleFile" ]
+then
+    if [ "$force" = 0 ]
+    then
+	echo "$bundleFile already exists use -force to overwrite it or -bundle-file <filename> to choose a new one"
+	exit
+    fi
+fi
+
+(
+echo "#!/bin/bash"
+echo '# -*- ksh -*-'
+echo
+echo "# This is a shell script that contains a number of files as HERE-scripts within"
+echo 
+echo 'if [ "$1" = "-list" ] ; then'
+for filename
+do
+    echo "    echo $filename"
+done
+echo "    exit"
+echo 'fi'
+echo 'if [ "$1" = "-help" ]'
+echo 'then'
+echo "    echo \"usage: ./$bundleFile -help           prints this message\""
+echo "    echo \"       ./$bundleFile -list           lists the constituent files but does not unbundle them\""
+echo "    echo \"       ./$bundleFile                 reconstructs the constituent files (unbundles them)\""
+echo '    exit'
+echo 'fi'
+
+echo
+echo "# To rename files change the second filename in the move line below and"
+echo "# uncomment the line. You will also need to change the filename where it"
+echo "# appears below"
+echo
+for filename
+do
+    echo "# mv $filename $filename"
+done
+
+echo
+echo "# ======================================================================="
+echo "# start of files"
+echo "# ======================================================================="
+
+for filename
+do
+   echo
+   echo 'echo "unbundling           '$filename'"'
+   dir=$(dirname $filename);
+   if [ "$dir" != "" -a "$dir" != "." ]
+   then
+       echo "if [ -d '$dir' ]"
+       echo "then"
+       echo "    :"
+       echo "else"
+       echo "    mkdir -p $dir"
+       echo "fi"
+   fi
+   echo "sed 's/^$intro//' << 'End of $filename' > $filename"
+   sed "s/^/$intro/" $filename
+   terminator=`/usr/bin/tail -1c $filename`
+   if [ "$terminator" != "\
+" ]
+   then 
+       echo
+       echo "adding a newline at the end of $filename" 1>&2
+   fi
+   echo "End of $filename"
+done
+) > $bundleFile
+
+chmod +x $bundleFile
