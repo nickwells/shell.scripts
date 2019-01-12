@@ -4,19 +4,24 @@ filename=$1
 scriptName=$filename.QScript
 if [ -s $filename ]
 then
+    (
+    cat $HOME/bash.scripts/YNQ.func
     while read line
     do
 	echo "echo"
 	echo "echo '=============================='"
-	echo 'echo "Command: "'$line
-	echo "read -p 'Execute? '"
-	echo 'if [ "$REPLY" = "q" ] ; then shout.alert Quitting ; exit 1 ; fi'
-	echo 'if [ "$REPLY" = "n" ] ; then'
-	echo "    shout.alert Skipping"
-	echo 'else'
-	echo "    "$line
-	echo 'fi'
-    done > $scriptName < $filename
+	lineNoQuotes=$(echo "$line" |
+		      sed -e "s,','\\'',g")
+	escLine=$(echo "$line" |
+		      sed  \
+			  -e 's,",\\",g' \
+			  -e "s,','\\'',g" \
+			  -e 's,\$(,\\$(,'
+			  )
+	echo "echo \"Command:\" '$lineNoQuotes'"
+	echo "YNQ 'Execute' \"$escLine\""
+    done
+    ) > $scriptName < $filename
     chmod +x $scriptName
 
     echo Created $scriptName

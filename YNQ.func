@@ -1,0 +1,15 @@
+# -*- shell-script -*-
+
+function YNQ() {
+    prompt=$1
+    shift
+    read -p "$prompt"'? ([y]/n/q): '
+    if [ "$REPLY" = "q" ] ; then
+	shout.alert Quitting
+	exit 1
+    elif [ "$REPLY" = "n" ] ; then
+	shout.alert Skipping
+    else
+	eval "$*"
+    fi
+}
