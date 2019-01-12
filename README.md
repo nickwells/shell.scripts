@@ -15,8 +15,16 @@ Some useful bash scripts
   will generate a second file with the name of the first file plus `.QScript`. This
   new file will have each line surrounded with shell commands that will prompt you
   to confirm that you want to run the command before running it.
-* `nextSemver` when run within a git repository will find the highest valid semantic
+* `semVerNext` when run within a git repository will find the highest valid semantic
   version number and increment it. By default it will increment the patch version but
   you can supply arguments to change this: `-part minor` will increment the minor
   version and `-part major` will increment the major number. **NOTE:** You must have the
   `semvertools` commands somewhere in your PATH
+* `semVerUpdGoModToLatest` when run within a git repository will find the
+  latest versions of the required modules and prompt you to upgrade to
+  them. **NOTE:** You must have the `semvertools` commands somewhere in your
+  PATH
+* `YNQ.func` is a function definition that can be loaded into scripts and it
+  provides a utility function that prints a prompt, reads a reply and
+  optionally executes a command. According to the value of the reply it will
+  either skip the command, quit the script or run the command.
