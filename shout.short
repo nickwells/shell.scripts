@@ -1,0 +1,10 @@
+#!/bin/bash
+
+Star='***'
+echo "$Star $1"
+shift
+while [ $# -gt 0 ]
+do
+    echo "$Star    $1"
+    shift
+done

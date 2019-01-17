@@ -1,15 +1,40 @@
 # -*- shell-script -*-
 
+function YNQHelp() {
+    shout.short "enter one of" \
+		"'y', 'Y'   to perform the action (this is the default)" \
+		"'n', 'N'   to skip" \
+		"'q', 'Q'   to quit (and exit)" \
+		"'?'        to show this message"
+}
+
 function YNQ() {
     prompt=$1
     shift
-    read -p "$prompt"'? ([y]/n/q): '
-    if [ "$REPLY" = "q" ] ; then
-	shout.alert Quitting
-	exit 1
-    elif [ "$REPLY" = "n" ] ; then
-	shout.alert Skipping
-    else
-	eval "$*"
-    fi
+    errorPrinted="N"
+    REPLY="XXX"
+    while [ "$REPLY" != "" -a "$REPLY" != "y" -a "$REPLY" != "Y" -a \
+		       "$REPLY" != "n" -a "$REPLY" != "N" -a \
+		       "$REPLY" != "q" -a "$REPLY" != "Q" ]
+    do
+	read -n 1 -p "$prompt"'? ([y]/n/q): '
+	if [ -n "$REPLY" ] ; then echo ; fi
+	if [ "$REPLY" = "q" -o "$REPLY" = "Q" ] ; then
+	    shout.alert Quitting
+	    exit 1
+	elif [ "$REPLY" = "n" -o "$REPLY" = "N" ] ; then
+	    shout.short Skipping
+	elif [ "$REPLY" = "y" -o "$REPLY" = "Y" -o "$REPLY" = "" ] ; then
+	    shout.short "Executing ..."
+	    eval "$*"
+	elif [ "$REPLY" = "?" ] ; then
+		YNQHelp
+	else
+	    if [ "$errorPrinted" = "N" ] ; then
+		shout.short "bad reply: '$REPLY'"
+		YNQHelp
+		errorPrinted="Y"
+	    fi
+	fi
+    done
 }

@@ -1,0 +1,12 @@
+# -*- shell-script -*-
+
+echo "initialising..."
+
+chmod ugo+x bundle makeQScript shout.alert shout.header shout.short shout.smallHeader
+
+if type semverincr ; then
+    chmod ugo+x semVerLatest semVerNext semVerUpdGoModToLatest
+else
+    echo you need the semver tools installed in order to use the semVer... scripts
+fi
+echo done
