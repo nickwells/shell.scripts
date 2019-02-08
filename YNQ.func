@@ -20,13 +20,15 @@ function YNQ() {
 	read -n 1 -p "$prompt"'? ([y]/n/q): '
 	if [ -n "$REPLY" ] ; then echo ; fi
 	if [ "$REPLY" = "q" -o "$REPLY" = "Q" ] ; then
-	    shout.alert Quitting
+	    shout.alert "Quitting"
 	    exit 1
 	elif [ "$REPLY" = "n" -o "$REPLY" = "N" ] ; then
-	    shout.short Skipping
+	    shout.short "Skipping"
+	    return 1
 	elif [ "$REPLY" = "y" -o "$REPLY" = "Y" -o "$REPLY" = "" ] ; then
-	    shout.short "Executing ..."
 	    eval "$*"
+	    shout.short "Done"
+	    return 0
 	elif [ "$REPLY" = "?" ] ; then
 		YNQHelp
 	else

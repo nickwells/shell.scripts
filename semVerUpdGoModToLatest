@@ -3,16 +3,26 @@
 . $HOME/bash.scripts/YNQ.func
 
 updates=$(go list -m -u all  | grep ']$')
-if [ $(echo $updates | wc -l) == 0 ]
+if [ $(echo "$updates" | wc -c) == 1 ]
 then
     echo "Nothing to update"
     exit 0
 fi
 
 shout.smallHeader "available updates"
-echo $updates
+echo "$updates"
 
-for upd in $(echo $updates | sed -e 's/ v.* \[/@/' -e 's/\]$//')
+ChangesMade=0
+for upd in $(echo "$updates" | sed -e 's/ v.* \[/@/' -e 's/\]$//')
 do
     YNQ "update module to $upd" go mod edit -require $upd
+    if [ $? == 0 ] ; then ChangesMade=1 ; fi
 done
+
+if [ $ChangesMade == 1 ]
+then
+    shout.short "Tidying..."
+    go mod tidy
+    shout.short "Testing..."
+    go test -cover ./...
+fi
