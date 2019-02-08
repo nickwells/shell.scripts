@@ -8,12 +8,13 @@ then
     echo "Nothing to update"
     exit 0
 fi
+updates=$(echo "$updates" | sed -e 's/^/      /')
 
 shout.smallHeader "available updates"
 echo "$updates"
 
 ChangesMade=0
-for upd in $(echo "$updates" | sed -e 's/ v.* \[/@/' -e 's/\]$//')
+for upd in $(echo "$updates" | sed -e 's/^ *//' -e 's/ v.* \[/@/' -e 's/\]$//')
 do
     YNQ "update module to $upd" go mod edit -require $upd
     if [ $? == 0 ] ; then ChangesMade=1 ; fi
