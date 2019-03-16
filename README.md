@@ -22,6 +22,12 @@ Some useful bash scripts
   `.QScript`. This new file will have each line surrounded with shell
   commands that will prompt you to confirm that you want to run the command
   before running it.
+* `semVerLatest` when run within a git repository will print the highest
+  semantic version ID. **NOTE:** You must have the `semvertools` commands
+  somewhere in your PATH
+* `semVerList` when run within a git repository will list all the tags on the
+  repository correctly sorted as semantic version IDs. **NOTE:** You must
+  have the `semvertools` commands somewhere in your PATH
 * `semVerNext` when run within a git repository will find the highest valid
   semantic version number and increment it. By default it will increment the
   patch version but you can supply arguments to change this: `-part minor`
