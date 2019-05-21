@@ -1,3 +1,0 @@
-#!/bin/bash
-
-semverincr -semver $(git tag | semversort | tail -1) $*
