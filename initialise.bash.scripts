@@ -2,7 +2,7 @@
 
 echo "initialising..."
 
-chmod ugo+x bundle makeQScript shout.alert shout.header shout.short shout.smallHeader
+chmod ugo+x bundleFiles makeQScript shout.alert shout.header shout.short shout.smallHeader
 
 if type semverincr ; then
     chmod ugo+x semVerLatest semVerList semVerNext semVerUpdGoModToLatest
