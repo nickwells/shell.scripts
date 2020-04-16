@@ -2,7 +2,7 @@
 
 . $HOME/bash.scripts/YNQ.func
 
-updates=$(go list -m -u all  | grep ']$')
+updates=$(GOPROXY=direct go list -m -u all  | grep ']$')
 if [ $(echo "$updates" | wc -c) == 1 ]
 then
     echo "Nothing to update"
@@ -11,13 +11,30 @@ fi
 updates=$(echo "$updates" | sed -e 's/^/      /')
 
 shout.smallHeader "available updates"
-echo "$updates"
+echo "$updates" |
+    perl -ane '
+chomp;
+print;
+@oldParts = split(/\./, "[".$F[1]."]");
+@newParts = split(/\./, $F[2]);
+if    ($oldParts[0] ne $newParts[0]) { print "\t\tBREAKING Change"; }
+elsif ($oldParts[1] ne $newParts[1]) { print "\t\tMinor Change"; }
+print "\n"
+'
 
 ChangesMade=0
+ 
 for upd in $(echo "$updates" | sed -e 's/^ *//' -e 's/ v.* \[/@/' -e 's/\]$//')
 do
-    YNQ "update module to $upd" go mod edit -require $upd
-    if [ $? == 0 ] ; then ChangesMade=1 ; fi
+    if [ "$1" = "-a" ]
+    then
+	echo "applying update: $upd"
+	go mod edit -require $upd
+	ChangesMade=1
+    else
+	YNQ "update module to $upd" go mod edit -require $upd
+	if [ $? == 0 ] ; then ChangesMade=1 ; fi
+    fi
 done
 
 if [ $ChangesMade == 1 ]
