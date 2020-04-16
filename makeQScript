@@ -5,6 +5,7 @@ scriptName=$filename.QScript
 if [ -s $filename ]
 then
     (
+	echo "#!/bin/bash"
     cat $HOME/bash.scripts/YNQ.func
     while read line
     do
