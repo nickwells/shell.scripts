@@ -1,10 +1,17 @@
 #!/bin/bash
 
 Star='***'
+
+if [ "$1" == "-indent" ]
+then
+    Star="   $Star"
+    shift
+fi
+
 echo "$Star $1"
 shift
 
-for msg in "$*"
+for msg in "$@"
 do
-    echo "$Star    $msg"
+    echo "$Star     $msg"
 done
