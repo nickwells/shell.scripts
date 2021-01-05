@@ -41,6 +41,8 @@ if [ $ChangesMade == 1 ]
 then
     shout.short "Tidying..."
     go mod tidy
+    shout.short "Verifying..."
+    go mod verify
     shout.short "Testing..."
     go test -cover ./...
 fi
