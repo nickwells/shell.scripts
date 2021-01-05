@@ -5,10 +5,14 @@
 #
 # This only works if you are in a git repository
 
-export GitAuthor=$(git log -1 --format=tformat:'%an')
-export GitCommit=$(git log -1 --format=tformat:'%H')
-export GitDate=$(git   log -1 --date=iso --format=tformat:'%cd')
-export GitTag=$(git    tag -l --points-at $GitCommit)
+function getGitVars() {
+    export GitAuthor=$(git log -1 --format=tformat:'%an')
+    export GitCommit=$(git log -1 --format=tformat:'%H')
+    export GitDate=$(git   log -1 --date=iso --format=tformat:'%cd')
+    export GitTag=$(git    tag -l --points-at $GitCommit)
+}
+
+getGitVars
 
 # showGitVars prints the current values of the environment variables
 function showGitVars() {
