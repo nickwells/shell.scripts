@@ -1,0 +1,31 @@
+
+# -*- shell-script -*-
+#
+# dot this file to populate the Git... environment variables.
+#
+# This only works if you are in a git repository
+
+export GitAuthor=$(git log -1 --format=tformat:'%an')
+export GitCommit=$(git log -1 --format=tformat:'%H')
+export GitDate=$(git   log -1 --date=iso --format=tformat:'%cd')
+export GitTag=$(git    tag -l --points-at $GitCommit)
+
+# showGitVars prints the current values of the environment variables
+function showGitVars() {
+    printf "   Tag: %s\n" "$GitTag"
+    printf "Commit: %s\n" "$GitCommit"
+    printf "Author: %s\n" "$GitAuthor"
+    printf "  Date: %s\n" "$GitDate"
+}
+
+function goBuildTags() {
+    p=$1
+    if [ -z "$p" ]
+    then
+	echo "no package name has been given" 1>&2
+	return
+    fi
+    
+    printf "-X '$p.tag=%s' -X '$p.commit=%s' -X '$p.author=%s' -X '$p.date=%s'" \
+	   "$GitTag" "$GitCommit" "$GitAuthor" "$GitDate"
+}
