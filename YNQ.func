@@ -1,4 +1,6 @@
 # -*- shell-script -*-
+#
+# dot this file into your scripts
 
 function YNQHelp() {
     shout.short "enter one of" \
@@ -8,6 +10,14 @@ function YNQHelp() {
 		"'?'        to show this message"
 }
 
+# YNQ will print the first argument as a prompt and then will repeatedly read
+# the users response until it gets Y, N or Q. If it gets a response of 'Y',
+# 'y' or '' then it will eval the remaining parameters to YNQ, print "Done"
+# and return 0. It it gets a response of 'N' or 'n' then it will print
+# "Skipping" and return 1. If it gets a response of 'Q' or 'q' then it will
+# print "Quitting" and exit with status 1. If it gets a response of '?' then
+# it will print a help message and reprompt. Any other response and this will
+# print an error message and reprompt.
 function YNQ() {
     prompt=$1
     shift
