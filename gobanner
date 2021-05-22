@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+# if figlet is not installed: sudo apt install figlet
+
+figlet -W "$*" | sed -e 's,^,// ,'
