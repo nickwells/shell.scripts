@@ -2,13 +2,11 @@
 
 Star='***'
 Star9='*********'
-Dash9='---------'
 
 if [ "$1" == "-indent" ]
 then
     Star="   $Star"
     Star9="   $Star9"
-    Dash9="   $Dash9"
     shift
 fi
 
@@ -20,5 +18,3 @@ for msg in "$@"
 do
     echo "$Star        $msg"
 done
-
-echo "$Dash9"
