@@ -5,6 +5,7 @@
 #
 # This only works if you are in a git repository
 
+# getGitVars will set the values of the Git... environment variables
 function getGitVars() {
     export GitAuthor=$(git log -1 --format=tformat:'%an')
     export GitCommit=$(git log -1 --format=tformat:'%H')
@@ -22,14 +23,25 @@ function showGitVars() {
     printf "  Date: %s\n" "$GitDate"
 }
 
+# goBuildTags prints out a string suitable to be used as the value to a
+# -ldflags parameter as can be given to go build or go install
 function goBuildTags() {
-    p=$1
-    if [ -z "$p" ]
+    pkg=$1
+    if [ -z "$pkg" ]
     then
 	echo "no package name has been given" 1>&2
 	return
     fi
+
+    now="$(date --utc '+%Y-%m-%d %T +0000')"
+    buildUser="$(id --real --user --name)"
     
-    printf "-X '$p.tag=%s' -X '$p.commit=%s' -X '$p.author=%s' -X '$p.date=%s'" \
-	   "$GitTag" "$GitCommit" "$GitAuthor" "$GitDate"
+    ldfTag=$(printf "-X '$pkg.tag=%s'" "$GitTag")
+    ldfCommit=$(printf "-X '$pkg.commit=%s'" "$GitCommit")
+    ldfAuthor=$(printf "-X '$pkg.author=%s'" "$GitAuthor")
+    ldfDate=$(printf "-X '$pkg.date=%s'" "$GitDate")
+    ldfBuildDate=$(printf "-X '$pkg.buildDate=%s'" "$now")
+    ldfBuildUser=$(printf "-X '$pkg.buildUser=%s'" "$buildUser")
+
+    printf "%s\n" "$ldfTag $ldfCommit $ldfAuthor $ldfDate $ldfBuildDate $ldfBuildUser"
 }
