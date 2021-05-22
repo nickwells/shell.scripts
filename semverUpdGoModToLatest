@@ -2,6 +2,7 @@
 
 . $HOME/bash.scripts/YNQ.func
 
+go mod tidy
 updates=$(GOPROXY=direct go list -m -u all  | grep ']$')
 if [ $(echo "$updates" | wc -c) == 1 ]
 then
