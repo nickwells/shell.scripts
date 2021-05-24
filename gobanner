@@ -2,4 +2,32 @@
 
 # if figlet is not installed: sudo apt install figlet
 
-figlet -W "$*" | sed -e 's,^,// ,'
+cmtSedScript='s,^,// ,'
+strSedScript="s/\`/'/g"
+sed=$cmtSedScript
+intro=""
+outro=""
+
+if [ "$1" = "-h" -o "$1" = "-help" ]
+then
+    print "gobanner uses figlet to print its arguments as a banner"
+    print "suitable for inclusion in a Go program. By default it will"
+    print "generate the banner as a comment but if the first argument"
+    print "is '-s' or '-string' then it will generate it as a string."
+    print ""
+    print "If the string to be 'bannered' starts with a '-' it will"
+    print "be interpreted by figlet as a parameter, so avoid this."
+    exit
+fi
+
+if [ "$1" = "-s" -o "$1" = "-string" ]
+then
+    shift
+    sed=$strSedScript
+    intro='`'
+    outro='`'
+fi
+
+print -n $intro
+figlet -W "$*" | sed -e "$sed"
+print -n $outro
