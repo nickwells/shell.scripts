@@ -6,7 +6,7 @@ if [ -s $filename ]
 then
     (
 	echo "#!/bin/bash"
-    cat $HOME/bash.scripts/YNQ.func
+    cat $HOME/shell.scripts/YNQ.func
     while read line
     do
 	echo "echo"

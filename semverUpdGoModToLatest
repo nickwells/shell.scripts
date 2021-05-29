@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. $HOME/bash.scripts/YNQ.func
+. $HOME/shell.scripts/YNQ.func
 
 go mod tidy
 updates=$(GOPROXY=direct go list -m -u all  | grep ']$')
