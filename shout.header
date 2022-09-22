@@ -1,13 +1,8 @@
 #!/bin/bash
 
 eq="==================================================================================="
+banner="\n$eq\n$eq\n"
 
-echo
-echo $eq
-echo $eq
-echo
+echo "$banner"
 echo $*
-echo
-echo $eq
-echo $eq
-echo
+echo "$banner"

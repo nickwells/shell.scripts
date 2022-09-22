@@ -1,5 +1,8 @@
 #!/bin/bash
 
+Red="\e[1;31m"
+Reset="\e[0m"
+
 Star='***'
 Star9='*********'
 
@@ -11,7 +14,7 @@ then
 fi
 
 echo "$Star9"
-echo "$Star ALERT: $1"
+echo -e "$Star ${Red}ALERT:${Reset} $1"
 shift
 
 for msg in "$@"
