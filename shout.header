@@ -1,8 +1,16 @@
-#!/bin/bash
+#!/bin/zsh
 
 eq="==================================================================================="
-banner="\n$eq\n$eq\n"
+indent=""
 
-echo "$banner"
-echo $*
-echo "$banner"
+if [ "$1" = "-indent" ]
+then
+    indent="   "
+    shift
+fi
+
+banner="\n$indent$eq\n$indent$eq\n"
+
+echo -e "$banner"
+echo -e "$indent"$*
+echo -e "$banner"

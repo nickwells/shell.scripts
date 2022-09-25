@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 Red="\e[1;31m"
 Reset="\e[0m"
@@ -6,7 +6,7 @@ Reset="\e[0m"
 Star='***'
 Star9='*********'
 
-if [ "$1" == "-indent" ]
+if [ "$1" = "-indent" ]
 then
     Star="   $Star"
     Star9="   $Star9"

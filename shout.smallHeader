@@ -1,8 +1,17 @@
-#!/bin/bash
+#!/bin/zsh
 
 line="---------------------------------------------"
+indent=""
+
+if [ "$1" = "-indent" ]
+then
+    indent="   "
+    shift
+fi
+
+banner="$indent$line"
 
 echo
-echo $line
-echo $*
-echo $line
+echo -e "$banner"
+echo -e "$indent"$*
+echo -e "$banner"
