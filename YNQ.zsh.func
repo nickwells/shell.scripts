@@ -1,0 +1,52 @@
+# -*- shell-script -*-
+#
+# dot this file into your zsh scripts
+
+function YNQHelp {
+    shout.short "enter one of" \
+		"'y', 'Y'   to perform the action (this is the default)" \
+		"'n', 'N'   to skip" \
+		"'q', 'Q'   to quit (and exit)" \
+		"'?'        to show this message"
+}
+
+# YNQ will print the first argument as a prompt and then will repeatedly read
+# the users response until it gets Y, N or Q. If it gets a response of 'Y',
+# 'y' or '' then it will eval the remaining parameters to YNQ, print "Done"
+# and return 0. It it gets a response of 'N' or 'n' then it will print
+# "Skipping" and return 1. If it gets a response of 'Q' or 'q' then it will
+# print "Quitting" and exit with status 1. If it gets a response of '?' then
+# it will print a help message and reprompt. Any other response and this will
+# print an error message and reprompt.
+function YNQ {
+    typeset prompt=$1
+    shift
+    typeset errorPrinted="N"
+    typeset REPLY="XXX"
+    while [[ $REPLY != "" && \
+		    $REPLY != "y" && $REPLY != "Y" && \
+		    $REPLY != "n" && $REPLY != "N" && \
+		    $REPLY != "q" && $REPLY != "Q" ]]
+    do
+	read -k 1 "?$prompt"'? ([y]/n/q): '
+
+	if [[ -n $REPLY ]] ; then echo ; fi
+	if [[ $REPLY = "q" || $REPLY = "Q" ]] ; then
+	    shout.alert "Quitting"
+	    exit 1
+	elif [[ $REPLY = "n" || $REPLY = "N" ]] ; then
+	    shout.short "Skipping"
+	elif [[ $REPLY = "y" || $REPLY = "Y" || $REPLY = "" ]] ; then
+	    eval "$*"
+	    shout.short "Done"
+	elif [[ $REPLY = "?" ]] ; then
+		YNQHelp
+	else
+	    if [[ "$errorPrinted" = "N" ]] ; then
+		shout.short "bad reply: '$REPLY'"
+		YNQHelp
+		errorPrinted="Y"
+	    fi
+	fi
+    done
+}
